@@ -411,7 +411,7 @@ Content-Type: application/json
             당신은 회사 분석 전문가입니다. 아래 제공된 PDF에서 추출한 텍스트를 분석하여 "{company_name}" 회사에 대한 상세 정보를 추출해주세요.
 
             다음 정보들을 최대한 정확하게 찾아 JSON 형식으로 반환해주세요:
-            
+
             # 기본 회사 정보
             - industry: 회사의 산업 분야 (예: "소프트웨어", "제조업" 등)
             - sales: 연간 매출액 (숫자만, 단위 없이)
@@ -421,7 +421,7 @@ Content-Type: application/json
             - address: 회사 주소
             - email: 연락 이메일
             - phone_number: 연락처
-            
+
             # 상세 정보
             - company_description: 회사 설명 및 핵심 사업 분야 (500자 이내)
             - products_services: 주요 제품 및 서비스 (쉼표로 구분된 목록)
@@ -430,7 +430,7 @@ Content-Type: application/json
             - strengths: 회사의 강점 (쉼표로 구분된 목록)
             - business_model: 비즈니스 모델 설명 (300자 이내)
 
-            텍스트에서 명확하게 확인할 수 없는 정보는 null로 표시하거나 생략하세요. 
+            텍스트에서 명확하게 확인할 수 없는 정보는 null로 표시하거나 생략하세요.
             특히 매출액이나 투자금액은 확실한 숫자만 포함하고 추측하지 마세요.
 
             분석할 PDF 텍스트:
@@ -442,7 +442,7 @@ Content-Type: application/json
 ### 2. Lead 탐색 Prompt
 
 ```
-        당신은 B2B 영업 리드 스카우트 전문가입니다. 
+        당신은 B2B 영업 리드 스카우트 전문가입니다.
         아래 회사 정보를 기반으로 이 회사에 제품이나 서비스를 판매하기에 적합한 잠재적인 영업 타겟이 될 수 있는 회사 5개를 찾아주세요.
 
         소스 회사 정보:
@@ -469,7 +469,7 @@ Content-Type: application/json
         8. 당면 문제: 소스 회사가 해결하는 문제와 유사할수록 선호
 
         리드 대상 회사의 관련성 점수(relevance_score)는 다음 항목 기준 가중치를 적용하여 산출해주세요:
-        
+
         | 항목 | 기준 | 가중치(%) | 설명 |
         |------|------|-----------|------|
         | 산업군 적합성 | 코어 타깃 산업군 포함 여부 | 30% | 예: IT, 제조, 환경 분야 등 |
@@ -478,7 +478,7 @@ Content-Type: application/json
         | 지역성 | 특정 지역(예: 수도권, 해외시장) 여부 | 10% | 전략 지역 포함 시 추가 점수 |
         | 뉴스/이슈 노출 | 최근 1년 내 긍정 뉴스 기사 수 | 10% | 긍정적 이슈 많은 기업 우대 |
         | 비즈니스 적합성 | 소스 회사 제품/서비스 활용 가능성 | 10% | 활용 시나리오가 명확할수록 가산점 |
-        
+
         응답은 다음 JSON 형식으로 제공해주세요:
         {{
             "leads": [
@@ -487,7 +487,7 @@ Content-Type: application/json
                     "industry": "산업",
                     "sales": 매출액(숫자),
                     "total_funding": 총 펀딩 금액(숫자),
-                    "homepage": "웹사이트 URL", 
+                    "homepage": "웹사이트 URL",
                     "key_executive": "주요 경영진",
                     "address": "회사 주소",
                     "email": "연락 이메일",
@@ -499,8 +499,8 @@ Content-Type: application/json
             ]
         }}
 
-        중요: 
-        1. 실제로 확인된 정보만 포함하세요. 
+        중요:
+        1. 실제로 확인된 정보만 포함하세요.
         2. 홈페이지 URL은 반드시 실제 존재하는 URL만 제공하고, 확실하지 않은 경우 빈 문자열("")로 남겨두세요.
         3. 단순히 회사명을 기반으로 URL을 추측하지 마세요.
         4. 웹 검색을 통해 확인된 정보만 포함하세요.
@@ -541,3 +541,34 @@ Content-Type: application/json
 3. AI 기반 잠재 고객 식별
 4. 결과 정제 및 저장
 5. 응답 생성
+
+---
+
+## 추가 개발 내용: LeadScout SDK
+
+이번 프로젝트에서는 AI 기반 리드 스카우팅을 지원하는 **LeadScout SDK** 기능을 추가 개발하였습니다.
+
+### SDK 주요 기능
+
+- **기업 프로필 등록** (`create_company_profile`)
+- **기업 프로필 조회** (`get_all_company_profiles`)
+- **PDF 문서 분석** (`analyze_pdf`)
+- **잠재 고객 발굴** (`find_leads`)
+- **AI Agent 간 대화 시뮬레이션** (`start_conversation`)
+
+### 설치 방법 (개발 로컬 환경 기준)
+
+```bash
+# 프로젝트 루트 경로에서
+pip install -e .
+
+#SDK 사용 예시
+from leadscout_sdk.scout_agent.company_profile import create_company_profile
+
+result = create_company_profile(
+    company_name="테스트 회사",
+    industry="AI 솔루션",
+    homepage="https://example.com"
+)
+print(result)
+
